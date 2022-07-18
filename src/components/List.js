@@ -1,28 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 
-function List({todosList}) {
-  const [isActive,setIsActive] = useState(false)
-  const handleClick = (current) => {
-    setIsActive(current => !current)
-  }
-    return(
-        <>
-            <li onClick={handleClick} style={{textDecoration: isActive ? " line-through" : "",color: isActive ? "#d9d9d9" : "#4d4d4d"}}>
-              <div className="view">
-                <label>Kitap oku</label>
-                <button className="destroy"></button>
-              </div>
-            </li>
-            {todosList.map((todo,id) => {
-              return <li key={id} onClick={handleClick} style={{textDecoration: isActive ? " line-through" : "",color: isActive ? "#d9d9d9" : "#4d4d4d"}}>
-                        <div className="view">
-                          <label>{todo}</label>
-                          <button className="destroy"></button>
-                        </div>
-                      </li>
-            })}
-        </>
-    )
+function List({addTodo, todoList }) {
+  const onCompleted = (id) => {
+    todoList[id].isCompleted = !todoList[id].isCompleted;
+    addTodo([...todoList]);
+  };
+  const onDeleted = (id) => {
+    todoList.splice(id,1);
+    addTodo([...todoList]);
+  };
+  return (
+    <>
+      {todoList.map((todo, id) => {
+        return (
+          <li key={id} style={{ textDecoration:todo.isCompleted ? " line-through" : "", color: todo.isCompleted ? "#d9d9d9" : "#4d4d4d" }}>
+            <div className="view">
+              <label onClick={() => onCompleted(id)}>{todo.title}</label>
+              <button className="destroy" onClick={() => onDeleted(id)}></button>
+            </div>
+          </li>
+        );
+      })}
+    </>
+  );
 }
 
-export default List
+export default List;
